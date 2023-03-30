@@ -1,0 +1,162 @@
+[
+    {
+        "id": "f6f1731376ea3997",
+        "type": "tab",
+        "label": "default filter",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "mqttBrokerId",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "${HOST}",
+        "port": "${PORT}",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "111c48f8721144f4",
+        "type": "fiware-decoder",
+        "z": "f6f1731376ea3997",
+        "name": "",
+        "x": 240,
+        "y": 80,
+        "wires": [
+            [
+                "52224f2e661840a9"
+            ]
+        ]
+    },
+    {
+        "id": "30e3eb789285044b",
+        "type": "filter-value",
+        "z": "f6f1731376ea3997",
+        "name": "report change > 1% ",
+        "propertyName": "numValue",
+        "propertyCondition": "greaterThan",
+        "interval": "60000",
+        "thresholdValue": "1",
+        "isPercent": true,
+        "x": 570,
+        "y": 80,
+        "wires": [
+            [
+                "565ae36bb04563d9"
+            ]
+        ]
+    },
+    {
+        "id": "84b06e7a241ad6dd",
+        "type": "fiware-emitter",
+        "z": "f6f1731376ea3997",
+        "name": "",
+        "x": 940,
+        "y": 80,
+        "wires": [
+            [
+                "53206f712e2e9795"
+            ]
+        ]
+    },
+    {
+        "id": "565ae36bb04563d9",
+        "type": "function",
+        "z": "f6f1731376ea3997",
+        "name": "change topic",
+        "func": "msg.topic = msg.payload.metadata.source +'/'+ msg.topic\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 80,
+        "wires": [
+            [
+                "84b06e7a241ad6dd"
+            ]
+        ]
+    },
+    {
+        "id": "ed10434e665437d3",
+        "type": "mqtt in",
+        "z": "f6f1731376ea3997",
+        "name": "",
+        "topic": "#",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "mqttBrokerId",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 70,
+        "y": 80,
+        "wires": [
+            [
+                "111c48f8721144f4"
+            ]
+        ]
+    },
+    {
+        "id": "52224f2e661840a9",
+        "type": "switch",
+        "z": "f6f1731376ea3997",
+        "name": "",
+        "property": "payload.metadata.type",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "DeviceMeasurement",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 410,
+        "y": 80,
+        "wires": [
+            [
+                "30e3eb789285044b"
+            ]
+        ]
+    },
+    {
+        "id": "53206f712e2e9795",
+        "type": "mqtt out",
+        "z": "f6f1731376ea3997",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "mqttBrokerId",
+        "x": 1110,
+        "y": 80,
+        "wires": []
+    }
+]
